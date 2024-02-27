@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "phaser": "^3.80.0",
+    "web3": "^4.5.0"
+  },
+  "name": "flappy-pepe-games",
+  "version": "1.0.0",
+  "description": "Flappy Pepe Games by 0xl4",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "web3",
+    "games"
+  ],
+  "author": "0xl4",
+  "license": "MIT"
+}

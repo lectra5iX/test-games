@@ -146,7 +146,7 @@ function placePipes() {
 }
 
 function moveBird(e) {
-    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+    if (e.type === 'touchstart' || e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
         //jump
         velocityY = -6;
 
@@ -159,6 +159,8 @@ function moveBird(e) {
         }
     }
 }
+
+window.addEventListener('touchstart', moveBird);
 
 function detectCollision(a, b) {
     return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner

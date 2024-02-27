@@ -30,9 +30,9 @@ let topPipeImg;
 let bottomPipeImg;
 
 //physics
-let velocityX = -2; //pipes moving left speed
-let velocityY = 0; //bird jump speed
-let gravity = 0.4;
+let velocityX = -1.5; //pipes moving left speed
+let velocityY = 0.3; //bird jump speed
+let gravity = 0.25;
 
 let gameOver = false;
 let score = 0;
@@ -43,9 +43,10 @@ window.onload = function() {
     board.width = boardWidth;
     context = board.getContext("2d"); //used for drawing on the board
 
-    //draw flappy bird
-    // context.fillStyle = "green";
-    // context.fillRect(bird.x, bird.y, bird.width, bird.height);
+    // draw flappy bird
+    context.fillStyle = "green";
+    context.fillRect(bird.x, bird.y, bird.width, bird.height);
+
 
     //load images
     birdImg = new Image();
@@ -63,7 +64,28 @@ window.onload = function() {
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
     document.addEventListener("keydown", moveBird);
+    var playAgainButton = document.getElementById('playAgainButton');
+
+    playAgainButton.addEventListener('click', function() {
+        playAgainButton.style.display = 'none';
+        restartGame();
+    });
+
+    playAgainButton.addEventListener('touchstart', function() {
+        playAgainButton.style.display = 'none';
+        restartGame();
+    });
 }
+
+function restartGame() {
+    bird.x = birdX;
+    bird.y = birdY;
+    velocityY = 0.3;
+    pipeArray = [];
+    score = 0;
+    gameOver = false;
+}
+
 
 function update() {
     requestAnimationFrame(update);
@@ -81,7 +103,11 @@ function update() {
     if (bird.y > board.height) {
         gameOver = true;
     }
-
+    if (gameOver) {
+        gameOverMessage.style.display = "block";
+    } else {
+        gameOverMessage.style.display = "none";
+    }
     //pipes
     for (let i = 0; i < pipeArray.length; i++) {
         let pipe = pipeArray[i];
@@ -105,13 +131,25 @@ function update() {
 
     //score
     context.fillStyle = "white";
-    context.font="45px sans-serif";
-    context.fillText(score, 5, 45);
+    context.font="20px sans-serif";
+    // Menulis "score:"
+    context.fillText("score:", 15, 25);
+    // Menulis nilai skor
+    context.fillText(score, 75, 26);
 
-    if (gameOver) {
-        context.fillText("GAME OVER", 5, 90);
-    }
+if (gameOver) {
+    // context.fillText("GAME OVER", 5, 90);
+    document.getElementById('playAgainButton').style.display = 'block';
 }
+
+
+}
+    // function changeBackgroundOnScore() {
+    //     if (score === 3) {
+    //         let board = document.getElementById('board');
+    //         board.style.backgroundImage = 'url("./flappybirdbg-3.png")';
+    //     }
+    // }
 
 function placePipes() {
     if (gameOver) {
@@ -146,23 +184,34 @@ function placePipes() {
 }
 
 function moveBird(e) {
-    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
-        //jump
-        velocityY = -6;
+    if (e.type === 'touchstart' || e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+        //  LONCAT
+        velocityY = -5;
 
-        //reset game
+        // RESET 
         if (gameOver) {
             bird.y = birdY;
             pipeArray = [];
             score = 0;
             gameOver = false;
+            playAgainButton.style.display = 'none';
         }
     }
 }
 
+document.addEventListener('touchstart', moveBird);
+
+window.addEventListener('wheel', function(e) {
+    e.preventDefault();
+}, { passive: false });
+
+window.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+}, { passive: false });
+
 function detectCollision(a, b) {
-    return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner
-           a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
-           a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
-           a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+    return a.x < b.x + b.width &&   
+           a.x + a.width > b.x &&   
+           a.y < b.y + b.height &&  
+           a.y + a.height > b.y;   
 }
